@@ -1,4 +1,6 @@
-﻿namespace GloboTicket.Admin.Mobile
+﻿using GloboTicket.Admin.Mobile.Views;
+
+namespace GloboTicket.Admin.Mobile
 {
     public partial class App : Application
     {
@@ -6,7 +8,7 @@
         {
             InitializeComponent();
 
-            MainPage = new AppShell();
+            MainPage = new EventDetailPage();
         }
     }
 }
