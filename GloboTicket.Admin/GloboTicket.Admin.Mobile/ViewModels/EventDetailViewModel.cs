@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
 
 namespace GloboTicket.Admin.Mobile.ViewModels
 {
@@ -76,6 +77,7 @@ namespace GloboTicket.Admin.Mobile.ViewModels
                 {
                     _eventStatus = value;
                     OnPropertyChanged();
+                    ((Command)CancelEventCommand).ChangeCanExecute();
                 }
             }
         }
@@ -89,6 +91,7 @@ namespace GloboTicket.Admin.Mobile.ViewModels
                 {
                     _date = value;
                     OnPropertyChanged();
+                    ((Command)CancelEventCommand).ChangeCanExecute();
                 }
             }
         }
@@ -150,8 +153,20 @@ namespace GloboTicket.Admin.Mobile.ViewModels
 
         public bool ShowThumbnailImage => !ShowLargerImage;
 
+        public ICommand CancelEventCommand
+        {
+            get;
+        }
+
+        private void CancelEvent() => EventStatus = EventStatusEnum.Cancelled;
+
+        private bool CanCancelEvent() => EventStatus != EventStatusEnum.Cancelled && Date.AddHours(-4) > DateTime.Now;
+
+
         public EventDetailViewModel()
         {
+            CancelEventCommand = new Command(CancelEvent, CanCancelEvent);
+
             Id = Guid.Parse("EE272F8B-6096-4CB6-8625-BB4BB2D89E8B");
             Name = "John Egberts Live";
             Price = 65;
