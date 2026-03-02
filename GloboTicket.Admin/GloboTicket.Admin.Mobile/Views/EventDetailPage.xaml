@@ -3,15 +3,34 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GloboTicket.Admin.Mobile.Views.EventDetailPage"
              xmlns:vm="clr-namespace:GloboTicket.Admin.Mobile.ViewModels"
+             xmlns:converters="clr-namespace:GloboTicket.Admin.Mobile.Converters"
              Title="EventDetailPage">
+    <ContentPage.Resources>
+        <converters:StatusEnumToTextConverter x:Key="StatusEnumToTextConverter" />
+    </ContentPage.Resources>
     <Grid>
         <ScrollView>
             <Grid>
                 <VerticalStackLayout Padding="10">
                     <!-- Name -->
-                    <Label Style="{StaticResource TitleLabelStyle}" />
+                    <Label
+                        Text="{Binding Path=Name, Mode=OneWay}"
+                        Style="{StaticResource TitleLabelStyle}" />
 
-                    <Image WidthRequest="100" />
+                    <HorizontalStackLayout>
+                        <CheckBox IsChecked="{Binding ShowLargerImage, Mode=OneWayToSource}" />
+                        <Label Text="Show larger image"/>
+                    </HorizontalStackLayout>                 
+
+                    <Image 
+                        IsVisible="{Binding ShowThumbnailImage, Mode=OneWay}"
+                        Source="{Binding ImageUrl}"
+                        WidthRequest="100" />
+
+                    <Image 
+                        HorizontalOptions="Fill"
+                        IsVisible="{Binding ShowLargerImage, Mode=OneWay}"
+                        Source="{Binding ImageUrl}" />
 
                     <Grid RowDefinitions="Auto,*">
                         <Grid
@@ -28,17 +47,24 @@
                             <Label
                                 Grid.Row="0"
                                 Grid.Column="1"
-                                Style="{StaticResource ValueLabelStyle}" />
+                                Style="{StaticResource ValueLabelStyle}" 
+                                Text="{Binding Artists}"/>
 
                             <!-- Row 2 Price -->
                             <Label
                                 Grid.Row="1"
                                 Grid.Column="0"
                                 Text="Price"/>
-                            <Label 
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Style="{StaticResource ValueLabelStyle}" />
+                            <HorizontalStackLayout Grid.Row="1" Grid.Column="1">
+                                <Label
+                                    Style="{StaticResource ValueLabelStyle}"
+                                    Text="{Binding Price, Mode=OneWay, StringFormat='{0:C}'}"/>
+                                <Stepper
+                                    Increment="5"
+                                    Maximum="150"
+                                    Minimum="25"
+                                    Value="{Binding Price, Mode=TwoWay}" />
+                            </HorizontalStackLayout>
 
                             <!-- Row 3 Status -->
                             <Label
@@ -48,7 +74,8 @@
                             <Label
                                 Grid.Row="2"
                                 Grid.Column="1"
-                                Style="{StaticResource ValueLabelStyle}" />
+                                Style="{StaticResource ValueLabelStyle}" 
+                                Text="{Binding EventStatus, Converter={StaticResource StatusEnumToTextConverter}}"/>
 
                             <!-- Row 4 Date -->
                             <Label
@@ -58,7 +85,8 @@
                             <Label
                                 Grid.Row="3"
                                 Grid.Column="1"
-                                Style="{StaticResource ValueLabelStyle}" />
+                                Style="{StaticResource ValueLabelStyle}" 
+                                Text="{Binding Date}"/>
 
                             <!-- Row 5 Description -->
                             <Label
@@ -69,7 +97,8 @@
                             <Label
                                 Grid.Row="4"
                                 Grid.Column="1"
-                                Style="{StaticResource ValueLabelStyle}" />
+                                Style="{StaticResource ValueLabelStyle}" 
+                                Text="{Binding Description, TargetNullValue='No description provided'}"/>
 
                             <!-- Row 6 Category -->
                             <Label
@@ -79,7 +108,8 @@
                             <Label
                                 Grid.Row="5"
                                 Grid.Column="1"
-                                Style="{StaticResource ValueLabelStyle}" />
+                                Style="{StaticResource ValueLabelStyle}" 
+                                Text="{Binding Category.Name, TargetNullValue='No category name', FallbackValue='No category provided'}"/>
                         </Grid>
                     </Grid>
                 </VerticalStackLayout>
